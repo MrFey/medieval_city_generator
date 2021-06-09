@@ -1,6 +1,5 @@
-import area
+from area import *
 import random as r
-
 
 class House():
 
@@ -21,14 +20,29 @@ class House():
         self._direction = direction % 360
 
         if (self._has_garden):
-            self._area.split((r.random() % 0.4), direction)
+            self._area.split((r.randint(6, 9)) / 10.0, direction)
 
 
     def components(self):
         return self._area.components()
 
-    def get_id():
-         return Area._last_id
+    def get_area(self):
+        return self._area
 
+
+    @staticmethod
+    def get_id():
+        return Area._last_id
+
+
+
+
+if __name__ == "__main__":
+    from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
+    import json
+
+    shape = Polygon([(0,0), (10,0), (15,15), (-5,10)])
+    house = House(shape, True, 180)
+    tools.json(house.get_area(), '/tmp/house_class.json')
 
 
