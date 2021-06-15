@@ -13,6 +13,7 @@ def _partition_polygon0(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
         nb = 0
         points = []
+        (min_x,min_y,max_x,max_y) = (round(min_x), round(min_y),round(max_x), round(max_y))
         while(nb < HOUSES_MAX):
             x = r.randint(min_x, max_x)
             y = r.randint(min_y, max_y)
@@ -24,7 +25,7 @@ def _partition_polygon0(poly):
 def _get_sub_region0(vor, poly):
     regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
     regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
-    return [r for r in regions if poly.contains(r) ]
+    return [poly.intersection(r) for r in regions]
 
 
 class District():
@@ -33,7 +34,7 @@ class District():
     _polygon = None
     _blocks_list = []
     _lake_list   = []
-    _field_list  = []
+    _nb_fields   = 0
 
     def __init__(self,polygon):
         self._polygon = polygon
@@ -58,16 +59,17 @@ class District():
                 self._lake_list.append(Lake(region))
                 already_a_lake = True
 
-            elif not already_enough_fields and r.randint(0,nb_regions//3) == 0:
-                self._field_list.append(Field(region))
-                if (len(self._field_list) >= nb_regions//3):
+            elif not already_enough_fields:
+                self._blocks_list.append(Block(region,has_field=True))
+                self._nb_fields += 1
+                if (self._nb_fields >= nb_regions//3):
                     already_enough_fields = True
             else:
                 self._blocks_list.append(Block(region))
 
     def components(self):
         if len(self._blocks_list) > 0:
-            return [block.components() for block in self._blocks_list + self._field_list + self._lake_list ]
+            return [block.components() for block in self._blocks_list + self._lake_list ]
         else:
             return []
 
@@ -78,6 +80,6 @@ if __name__ == "__main__":
     from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
     import json
 
-    shape = Polygon([(0,0), (400,0), (400,150), (-50,100)])
-    district = District(shape)
+    zone = Polygon((2 * np.random.random((8,2)) - 1) * 20 ).convex_hull.buffer(20//2)
+    district = District(zone)
     tools.json(district, '/tmp/district.json')

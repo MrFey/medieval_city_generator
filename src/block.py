@@ -1,4 +1,5 @@
 from house import *
+from field import *
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
 import numpy as np
@@ -22,20 +23,22 @@ def _partition_polygon(poly):
 def _get_sub_region(vor, poly):
     regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
     regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
-    return [r for r in regions if poly.contains(r) ]
+    return [poly.intersection(r) for r in regions]
 
 
 class Block():
 
     #private:
     _polygon = None
-    _house_list = []
+    _sub_block_list = []
+    _has_field = False
 
 
 
-    def __init__(self,polygon):
+    def __init__(self,polygon,has_field=False):
         self._polygon = polygon
         self.house_partition() # Réparti la liste des maisons en fonction du polygone
+        self._has_field = has_field
 
     def house_partition(self):
         points = _partition_polygon(self._polygon)
@@ -43,12 +46,19 @@ class Block():
         regions = _get_sub_region(vor,self._polygon)
 
         #Pour le moment toutes les maisons ont un jardin
-        self._house_list = [House(region, False, 180) for region in regions]
+        index = 0
+        for region in regions:
+            if self._has_field and index % 2 == 0:
+                self._sub_block_list.append(Field(region))
+            else:
+                self._sub_block_list.append(House(region, False, 180))
+            index += 1
+        self._sub_block_list.insert(0,Field(self._polygon))
 
 
     def components(self):
-        if len(self._house_list) > 0:
-            return [house.components() for house in self._house_list]
+        if len(self._sub_block_list) > 0:
+            return [house.components() for house in self._sub_block_list]
         else:
             return []
 
