@@ -35,10 +35,12 @@ class Map():
     _castle = None
     _population = 0
     _has_castle = False;
+    _walls = None
 
     def __init__(self,population,verbose=False):
         #TODO: ajuster en fonction du nombre d'habitants
         radius = 200
+
 
         self._polygon = Polygon((2 * np.random.random((8,2)) - 1) * 40 ).convex_hull.buffer(40//2)
         self.district_partition(verbose)
@@ -54,6 +56,8 @@ class Map():
         already_enough_fields = False
 
 
+        self._walls = Area(MultiPolygon(regions).buffer(1, join_style=4),Category.WALL)
+
         for region in regions:
                 if (verbose):
                     print("[+] New District")
@@ -65,7 +69,7 @@ class Map():
 
     def components(self):
         if len(self._districts_list) > 0:
-            return [district.components() for district in self._districts_list]
+            return [self._walls.components()] + [district.components() for district in self._districts_list]
         else:
             return []
 

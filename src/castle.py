@@ -13,7 +13,7 @@ class Castle():
     def __init__(self,polygon):
         self._polygon = polygon
         self._area = Area(self._polygon, Category.CASTLE)
-        self._walls = Area(MultiPolygon([self._polygon]).buffer(1, join_style=4),Category.WALL)
+        self._walls = Area(self._polygon.buffer(1, join_style=4),Category.WALL)
 
 
     def components(self):
