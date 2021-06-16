@@ -6,7 +6,7 @@ import numpy as np
 import random as r
 
 
-HOUSES_MAX = 40
+HOUSES_MAX = 21
 
 def _partition_polygon(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -35,12 +35,12 @@ class Block():
 
 
 
-    def __init__(self,polygon,has_field=False):
+    def __init__(self,polygon,has_field=False,verbose=False):
         self._polygon = polygon
-        self.house_partition() # Réparti la liste des maisons en fonction du polygone
+        self.house_partition(verbose) # Réparti la liste des maisons en fonction du polygone
         self._has_field = has_field
 
-    def house_partition(self):
+    def house_partition(self,verbose=False):
         points = _partition_polygon(self._polygon)
         vor = Voronoi(points)
         regions = _get_sub_region(vor,self._polygon)
@@ -48,6 +48,8 @@ class Block():
         #Pour le moment toutes les maisons ont un jardin
         index = 0
         for region in regions:
+            if (verbose):
+                print("[+] New House")
             if self._has_field and index % 2 == 0:
                 self._sub_block_list.append(Field(region))
             else:

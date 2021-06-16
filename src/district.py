@@ -1,6 +1,8 @@
 from block import *
 from field import *
 from lake  import *
+from street import *
+from castle import *
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
 import numpy as np
@@ -14,7 +16,7 @@ def _partition_polygon0(poly):
         nb = 0
         points = []
         (min_x,min_y,max_x,max_y) = (round(min_x), round(min_y),round(max_x), round(max_y))
-        while(nb < HOUSES_MAX):
+        while(nb < SUB_BLOCK_MAX):
             x = r.randint(min_x, max_x)
             y = r.randint(min_y, max_y)
             if (poly.contains(Point(x,y))):
@@ -35,12 +37,13 @@ class District():
     _blocks_list = []
     _lake_list   = []
     _nb_fields   = 0
+    _has_castle  = False
 
-    def __init__(self,polygon):
+    def __init__(self,polygon,verbose=False,has_castle=False):
         self._polygon = polygon
-        self.block_partition()
+        self.block_partition(verbose,has_castle=has_castle)
 
-    def block_partition(self):
+    def block_partition(self,verbose=False,has_castle=False):
         points = _partition_polygon0(self._polygon)
         vor = Voronoi(points)
         regions = _get_sub_region0(vor,self._polygon)
@@ -65,7 +68,14 @@ class District():
                 if (self._nb_fields >= nb_regions//3):
                     already_enough_fields = True
             else:
-                self._blocks_list.append(Block(region))
+                if (verbose):
+                    print("[+] New Block")
+                if (has_castle and not self._has_castle):
+                    self._blocks_list.append(Castle(region))
+                    self._has_castle = True
+                else:
+                    self._blocks_list.append(Block(region,verbose=verbose))
+        self._blocks_list.insert(0, Field(self._polygon))
 
     def components(self):
         if len(self._blocks_list) > 0:
