@@ -1,4 +1,5 @@
 from house import *
+from land import *
 from field import *
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
@@ -6,7 +7,7 @@ import numpy as np
 import random as r
 
 
-HOUSES_MAX = 21
+HOUSES_MAX = 61
 
 def _partition_polygon(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -32,13 +33,15 @@ class Block():
     _polygon = None
     _sub_block_list = []
     _has_field = False
+    _has_land = False
 
 
 
-    def __init__(self,polygon,has_field=False,verbose=False):
+    def __init__(self,polygon,has_field=False, has_land=False, verbose=False):
         self._polygon = polygon
-        self.house_partition(verbose) # Réparti la liste des maisons en fonction du polygone
         self._has_field = has_field
+        self._has_land = has_land
+        self.house_partition(verbose) # Réparti la liste des maisons en fonction du polygone
 
     def house_partition(self,verbose=False):
         points = _partition_polygon(self._polygon)
@@ -53,9 +56,14 @@ class Block():
             if self._has_field and index % 2 == 0:
                 self._sub_block_list.append(Field(region))
             else:
+                region = region.buffer(-0.5).exterior.buffer(0.3)
                 self._sub_block_list.append(House(region, False, 180))
             index += 1
-        self._sub_block_list.insert(0,Field(self._polygon))
+        if (self._has_land):
+            self._sub_block_list.insert(0,land(self._polygon))
+
+        else:
+            self._sub_block_list.insert(0,Field(self._polygon))
 
 
     def components(self):
@@ -72,6 +80,5 @@ if __name__ == "__main__":
     import json
 
     shape = Polygon([(0,0), (400,0), (150,150), (-50,100)])
-    block = Block(shape)
-    print(block.components())
+    block = Block(shape,has_land=True)
     tools.json(block, '/tmp/block.json')

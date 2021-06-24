@@ -13,11 +13,11 @@ class Castle():
     def __init__(self,polygon):
         self._polygon = polygon
         self._area = Area(self._polygon, Category.CASTLE)
-        self._walls = Area(self._polygon.buffer(1, join_style=4),Category.WALL)
+        self._walls = Area(self._polygon.buffer(-0.3, join_style=2).exterior.buffer(0.3, join_style=2),Category.WALL)
 
 
     def components(self):
-        return [self._walls.components(), self._area.components()]
+        return [self._area.components(), self._walls.components()]
 
     def get_area(self):
         return self._area
@@ -27,3 +27,11 @@ class Castle():
     def get_id():
         return Area._last_id
 
+
+if __name__ == "__main__":
+    from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
+    import json
+
+    shape = Polygon([(0,0), (10,0), (15,15), (-5,10)])
+    castle = Castle(shape)
+    tools.json(castle, '/tmp/castle.json')

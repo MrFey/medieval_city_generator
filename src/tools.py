@@ -3,7 +3,6 @@ from collections import Iterable
 import fiona
 
 def json_write(obj,stream_writer):
-    print(obj,isinstance(obj,Iterable),"\n")
     if (not isinstance(obj,Iterable)): #on peut plus iterer = c'est un polygon
         stream_writer.write({
             'geometry': mapping(obj._polygon),
@@ -13,7 +12,9 @@ def json_write(obj,stream_writer):
         for co in obj:
             json_write(co,stream_writer)
 
-def json(what, filename):
+def json(what, filename,verbose=False):
+    if (verbose):
+        print("[*] exporting json...")
     schema = {
         'geometry': 'Polygon',
         'properties': {'category': 'int'},

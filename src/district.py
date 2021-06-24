@@ -9,7 +9,7 @@ import numpy as np
 import random as r
 
 
-SUB_BLOCK_MAX =  20
+SUB_BLOCK_MAX =  25
 
 def _partition_polygon0(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -38,9 +38,13 @@ class District():
     _lake_list   = []
     _nb_fields   = 0
     _has_castle  = False
+    _has_lake    = False
+    _has_land  = False
 
-    def __init__(self,polygon,verbose=False,has_castle=False):
+    def __init__(self,polygon,verbose=False,has_castle=False, has_lake=False, has_land=False):
         self._polygon = polygon
+        self._has_lake = has_lake
+        self._has_land = has_land
         self.block_partition(verbose,has_castle=has_castle)
 
     def block_partition(self,verbose=False,has_castle=False):
@@ -55,10 +59,11 @@ class District():
 
         nb_regions = len(regions)
         already_a_lake = False
-        already_enough_fields = False
+        already_enough_fields = True #If we want more field (normaly not useful)
 
+        index = 0
         for region in regions:
-            if not already_a_lake and r.randint(0,3 * nb_regions) == 0:
+            if not already_a_lake and self._has_lake:
                 self._lake_list.append(Lake(region))
                 already_a_lake = True
 
@@ -74,7 +79,9 @@ class District():
                     self._blocks_list.append(Castle(region))
                     self._has_castle = True
                 else:
-                    self._blocks_list.append(Block(region,verbose=verbose))
+                    put_land = self._has_land and ((index % 2) == 0)
+                    self._blocks_list.insert(-1,Block(region, has_land=put_land, verbose=verbose))
+            index += 1
         self._blocks_list.insert(0, Field(self._polygon))
 
     def components(self):
@@ -91,5 +98,5 @@ if __name__ == "__main__":
     import json
 
     zone = Polygon((2 * np.random.random((8,2)) - 1) * 20 ).convex_hull.buffer(20//2)
-    district = District(zone)
+    district = District(zone,has_castle=True, has_land=True)
     tools.json(district, '/tmp/district.json')

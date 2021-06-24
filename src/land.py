@@ -1,7 +1,7 @@
 from area import *
 import random as r
 
-class Lake():
+class land():
 
     #private:
     _polygon = None
@@ -10,9 +10,8 @@ class Lake():
     #public:
 
     def __init__(self,polygon):
-        polygon = polygon.buffer(0,join_style=3)
         self._polygon = polygon
-        self._area = Area(self._polygon, Category.LAKE)
+        self._area = Area(self._polygon, Category.LAND)
 
     def components(self):
         return self._area.components()
