@@ -9,7 +9,7 @@ import numpy as np
 import random as r
 
 
-SUB_BLOCK_MAX =  25
+SUB_BLOCK_MAX =  20
 
 def _partition_polygon0(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -33,21 +33,23 @@ def _get_sub_region0(vor, poly):
 class District():
 
     #private:
-    _polygon = None
-    _blocks_list = []
-    _lake_list   = []
-    _nb_fields   = 0
-    _has_castle  = False
-    _has_lake    = False
-    _has_land  = False
 
-    def __init__(self,polygon,verbose=False,has_castle=False, has_lake=False, has_land=False):
+
+    def __init__(self,polygon,verbose=False,has_castle=False, has_lake=False, has_land=False, has_street=False):
+
         self._polygon = polygon
         self._has_lake = has_lake
         self._has_land = has_land
-        self.block_partition(verbose,has_castle=has_castle)
+        self._has_street = has_street
+        self._has_castle = has_castle
 
-    def block_partition(self,verbose=False,has_castle=False):
+        self._blocks_list = []
+        self._lake_list   = []
+        self._nb_fields   = 0
+
+        self.block_partition(verbose)
+
+    def block_partition(self,verbose=False):
         points = _partition_polygon0(self._polygon)
         vor = Voronoi(points)
         regions = _get_sub_region0(vor,self._polygon)
@@ -58,7 +60,8 @@ class District():
         #block: reste
 
         nb_regions = len(regions)
-        already_a_lake = False
+        already_a_lake        = False
+        already_a_castle      = False
         already_enough_fields = True #If we want more field (normaly not useful)
 
         index = 0
@@ -75,14 +78,20 @@ class District():
             else:
                 if (verbose):
                     print("[+] New Block")
-                if (has_castle and not self._has_castle):
+                if (self._has_castle and not already_a_castle):
                     self._blocks_list.append(Castle(region))
-                    self._has_castle = True
+                    already_a_castle = True
                 else:
                     put_land = self._has_land and ((index % 2) == 0)
                     self._blocks_list.insert(-1,Block(region, has_land=put_land, verbose=verbose))
             index += 1
-        self._blocks_list.insert(0, Field(self._polygon))
+        if (self._has_street):
+            field  = Field(self._polygon.buffer(-0.5))
+            street = Street(self._polygon.buffer(-0.5).exterior.buffer(0.5))
+            self._blocks_list.insert(0, street)
+            self._blocks_list.insert(0, field)
+        else:
+            self._blocks_list.insert(0, Field(self._polygon))
 
     def components(self):
         if len(self._blocks_list) > 0:
@@ -98,5 +107,5 @@ if __name__ == "__main__":
     import json
 
     zone = Polygon((2 * np.random.random((8,2)) - 1) * 20 ).convex_hull.buffer(20//2)
-    district = District(zone,has_castle=True, has_land=True)
+    district = District(zone,has_castle=True, has_land=True, has_street=True, verbose=True)
     tools.json(district, '/tmp/district.json')

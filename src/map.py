@@ -6,7 +6,7 @@ import numpy as np
 import random as r
 
 
-SUB_DISTRICT_MAX =  7
+SUB_DISTRICT_MAX =  15
 
 def _partition_polygon00(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -30,30 +30,25 @@ def _get_sub_region00(vor, poly):
 class Map():
 
     #private:
-    _polygon    = None
-    _districts_list = []
-    _population = 0
-    _has_castle = False
-    _has_walls  = False
-    _has_lake   = False
-    _has_land = False
-    _walls      = []
 
-    def __init__(self, population=5000, has_walls=False, has_castle=False, has_lake=False, has_land=False, verbose=False):
+    def __init__(self, population=5000, has_walls=False, has_castle=False, has_lake=False, has_land=False, has_street=False, verbose=False):
         #TODO: ajuster en fonction du nombre d'habitants
-        radius = 40
+        radius = 100
 
         self._has_walls = has_walls
         self._has_castle = has_castle
         self._has_lake = has_lake
         self._has_land = has_land
+        self._has_street = has_street
 
+        self._walls      = []
+        self._population = 0
+        self._districts_list = []
         self._polygon = Polygon((2 * np.random.random((8,2)) - 1) * radius ).convex_hull.buffer(radius//2)
         self.district_partition(verbose=verbose)
 
     def district_partition(self,verbose=False):
         points = _partition_polygon00(self._polygon)
-        print(points)
         vor = Voronoi(points)
         regions = _get_sub_region00(vor,self._polygon)
 
@@ -70,10 +65,20 @@ class Map():
             if (verbose):
                 print("[+] New District")
                 if (self._has_castle and not already_a_castle):
-                    self._districts_list.append(District(region,verbose=verbose,has_castle=True, has_lake=self._has_lake))
+                    self._districts_list.append(District(region,
+                                                         verbose=verbose,
+                                                         has_castle=True,
+                                                         has_lake=self._has_lake,
+                                                         has_street=self._has_street,
+                                                         has_land=self._has_land))
                     already_a_castle = True
                 else:
-                    self._districts_list.insert(-1,District(region,verbose=verbose,has_lake=self._has_lake, has_land=self._has_land))
+                    self._districts_list.insert(-1,District(region,
+                                                            verbose=verbose,
+                                                            has_lake=self._has_lake,
+                                                            has_land=self._has_land,
+                                                            has_street=self._has_street,
+                                                            has_castle=False))
 
     def components(self):
         if len(self._districts_list) > 0:
@@ -93,4 +98,3 @@ if __name__ == "__main__":
 
     my_map = Map(3000,has_walls=True,has_lake=True,verbose=True,has_castle=True, has_land=True)
     tools.json(my_map, '/tmp/map.json')
-    print("There are %d districts" %len(my_map._districts_list))

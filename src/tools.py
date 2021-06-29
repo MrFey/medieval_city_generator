@@ -1,7 +1,7 @@
 from shapely.geometry import mapping
 from collections import Iterable
 import fiona
-
+import os
 def json_write(obj,stream_writer):
     if (not isinstance(obj,Iterable)): #on peut plus iterer = c'est un polygon
         stream_writer.write({
@@ -13,6 +13,8 @@ def json_write(obj,stream_writer):
             json_write(co,stream_writer)
 
 def json(what, filename,verbose=False):
+    if os.path.exists(filename):
+        os.remove(filename)
     if (verbose):
         print("[*] exporting json...")
     schema = {
