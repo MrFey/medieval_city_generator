@@ -16,6 +16,4 @@ Options disponibles pour le moment:
   Exemple:<br>
   <img src="/doc/map_ex.png"/>
   <br>
-  <img src="/doc/map_ex2.png"/>
-  <br>
   <img src="/doc/screen3.png"/>
