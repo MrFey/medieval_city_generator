@@ -12,6 +12,7 @@ Options disponibles pour le moment:
   - Château
   - Lac
   - Champs
+  - Rues
 
   Exemple:<br>
   <img src="/doc/map_ex.png"/>
