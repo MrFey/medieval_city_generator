@@ -3,7 +3,14 @@ import random as r
 
 class land():
 
+    """
+    Land class
+    Args:
+        polygon: shapely.geometry.Polygon, that describe the lands's shape
+    """
+    
     def __init__(self,polygon):
+        
         self._polygon = polygon
         self._area = Area(self._polygon, Category.LAND)
 
