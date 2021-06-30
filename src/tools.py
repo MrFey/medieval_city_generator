@@ -13,6 +13,9 @@ def json_write(obj,stream_writer):
             json_write(co,stream_writer)
 
 def json(what, filename,verbose=False):
+    """
+    Export in the json format any class that has a components() method
+    """
     if os.path.exists(filename):
         os.remove(filename)
     if (verbose):

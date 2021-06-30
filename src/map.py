@@ -7,6 +7,14 @@ import random as r
 
 
 def _partition_polygon00(poly, nb_district):
+    """Split a Polygon into sub polygons
+
+    param: poly: polygon that delimits the area
+    type: Polygon
+
+    param: nb_district: number of districts we want
+    type: int
+    """
         (min_x,min_y,max_x,max_y) = poly.bounds
         nb = 0
         points = []
@@ -20,6 +28,13 @@ def _partition_polygon00(poly, nb_district):
         return points
 
 def _get_sub_region00(vor, poly):
+    """retrieve regions from voronoi result
+    param: vor: voronoi result
+    type: vor: list
+
+    param: poly: polygon that delimits the area
+    type: Polygon
+    """
     regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
     regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
     return [poly.intersection(r) for r in regions]
@@ -30,6 +45,19 @@ class Map():
     #private:
 
     def __init__(self, population=5000, has_walls=False, has_castle=False, has_lake=False, has_land=False, has_street=False, verbose=False):
+        """
+         map class
+
+         Args:
+            population: int, determine the density and the size of the map
+            has_walls: boolean, specify if the map has walls or not
+            has_castle: boolean, specify if the map has a castle or not (one for the whole map)
+            has_lake: boolean, specify if the map has a lake or not (one per district)
+            has_land: boolean, specify if the map has lands instead of only fields
+            has_street: boolean, specify if the map has streets (streets are between districts)
+            verbose: prompt infos during construction
+
+         """
         #TODO: ajuster en fonction du nombre d'habitants
         radius = 100
 
@@ -49,6 +77,13 @@ class Map():
         self.district_partition(verbose=verbose)
 
     def district_partition(self,verbose=False):
+        """"split the map into districts
+
+        param: verbose: prompt infos or not
+
+        type: verbose: boolean, optional
+
+        """
         points = _partition_polygon00(self._polygon, self._nb_districts)
         vor = Voronoi(points)
         regions = _get_sub_region00(vor,self._polygon)
@@ -82,6 +117,7 @@ class Map():
                                                             has_castle=False))
 
     def components(self):
+        """Calls all districts components"""
         if len(self._districts_list) > 0:
             res = [district.components() for district in self._districts_list]
             if (self._has_walls):

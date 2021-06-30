@@ -4,6 +4,12 @@ import random as r
 class Field():
 
     def __init__(self,polygon):
+        """
+         field class
+
+         Args:
+             polygon: shapely.geometry.Polygon, that describe the field's shape
+         """
         self._polygon = polygon
         self._area = Area(self._polygon, Category.FIELD)
 

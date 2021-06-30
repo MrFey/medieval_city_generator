@@ -2,6 +2,9 @@ import matplotlib.pylab as plt
 from matplotlib.colors import ListedColormap
 import geopandas as gpd
 import sys
+"""
+Usefull to plot the city (from the json) in a notebook
+"""
 
 try:
     filename = sys.argv[1]
@@ -12,6 +15,7 @@ colors_dic = {1:[0.9,0.9,0.2, 1],
               2:[1, 1, 0.5, 1],
               3:[0.25, 0.6, 0.25, 1],
               4:[0.25, 0.75, 0.9, 1],
+              5:[0.3, 0.3, 0.8, 1],
               8:[0.8, 0.9, 0.55, 1],
               10:[0.7, 0.45, 0.25, 1],
               11:[0.5, 0.5, 0.63, 1],
