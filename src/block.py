@@ -30,8 +30,19 @@ def _get_sub_region(vor, poly):
 
 class Block():
 
+    """
+    Block class
+    
+    Args:
+        polygon: shapely.geometry.Polygon, that describe the block's shape
+        has_field: boolean that specify either the block has fields or not
+        has_land: boolean that specify either the block has a lands or not
+        has_street: boolean that specify either the block has a garden or not
+        verbose: boolean activating verbose mode or not 
+    """
 
     def __init__(self,polygon,has_field=False, has_land=False, has_street=False,verbose=False):
+        
         self._polygon    = polygon
         self._has_field  = has_field
         self._has_land   = has_land
