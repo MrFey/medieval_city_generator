@@ -4,6 +4,11 @@ import random as r
 class Street():
 
     def __init__(self,polygon):
+        """
+        Street class
+        Args:
+            polygon: shapely.geometry.Polygon, that represents the street's shape
+        """
         self._polygon = polygon
         self._area = Area(self._polygon, Category.STREET)
 
