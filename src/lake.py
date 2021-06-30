@@ -2,14 +2,15 @@ from area import *
 import random as r
 
 class Lake():
+    """
+    Lake class
+    
+    Args:
+        polygon: shapely.geometry.Polygon, that describe the lake's shape
+    """
 
     def __init__(self,polygon):
-        """
-         Lake class
-
-         Args:
-             polygon: shapely.geometry.Polygon, that describe the lake's shape
-         """
+        
         polygon = polygon.buffer(0,join_style=3)
         self._polygon = polygon
         self._area = Area(self._polygon, Category.LAKE)
