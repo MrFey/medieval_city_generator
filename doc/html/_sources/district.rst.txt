@@ -1,0 +1,7 @@
+district module
+===============
+
+.. automodule:: district
+   :members:
+   :undoc-members:
+   :show-inheritance:

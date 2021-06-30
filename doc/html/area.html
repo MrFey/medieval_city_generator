@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>area module &#8212; src  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="block module" href="block.html" />
+    <link rel="prev" title="Welcome to src’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-area">
+<span id="area-module"></span><h1>area module<a class="headerlink" href="#module-area" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="area.Area">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">area.</span></span><span class="sig-name descname"><span class="pre">Area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polygon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_areas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/area.html#Area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#area.Area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The area is the most basic class, however it has all that’s needed to
+plot the map.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>polygon: Polygon - countour of the area
+category: Category - type of area
+sub_areas: list - list of sub areas if any</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="area.Area.components">
+<span class="sig-name descname"><span class="pre">components</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/area.html#Area.components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#area.Area.components" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="area.Area.get_id">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/area.html#Area.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#area.Area.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="area.Area.identity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">identity</span></span><a class="headerlink" href="#area.Area.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Area.members">
+<span class="sig-name descname"><span class="pre">members</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#area.Area.members" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="area.Area.polygon">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">polygon</span></span><a class="headerlink" href="#area.Area.polygon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="area.Area.split">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">percentage</span></em>, <em class="sig-param"><span class="pre">direction</span></em>, <em class="sig-param"><span class="pre">inplace=True</span></em>, <em class="sig-param"><span class="pre">new_category=&lt;Category.GARDEN:</span> <span class="pre">8&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/area.html#Area.split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#area.Area.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split an area in two areas. Store result in self.sub_areas if inplace == True.</p>
+<dl>
+<dt>Args:</dt><dd><p>percentage: float - percentage of surface for first area, between 0 and 1
+direction: int - side for first area (from center to 0 = North, 90 = East…)
+new_category: Category - category of the second area</p>
+</dd>
+<dt>Returns: if inplace == False</dt><dd><p>area1: Area
+area2: Area</p>
+</dd>
+<dt>Tests:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">surf</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">)]),</span> <span class="n">Category</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">surf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># house takes 1/4 of surface and is north</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res0</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res0</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">polygon</span><span class="p">)</span><span class="o">.</span><span class="n">area</span> <span class="o">&lt;</span> <span class="mi">1</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="area.Category">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">area.</span></span><span class="sig-name descname"><span class="pre">Category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/area.html#Category"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#area.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.BRIDGE">
+<span class="sig-name descname"><span class="pre">BRIDGE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">51</span></em><a class="headerlink" href="#area.Category.BRIDGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.CASTLE">
+<span class="sig-name descname"><span class="pre">CASTLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">32</span></em><a class="headerlink" href="#area.Category.CASTLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.CATHEDRAL">
+<span class="sig-name descname"><span class="pre">CATHEDRAL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">21</span></em><a class="headerlink" href="#area.Category.CATHEDRAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.CHURCH">
+<span class="sig-name descname"><span class="pre">CHURCH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#area.Category.CHURCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.COMPOSITE">
+<span class="sig-name descname"><span class="pre">COMPOSITE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">90</span></em><a class="headerlink" href="#area.Category.COMPOSITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.FARM">
+<span class="sig-name descname"><span class="pre">FARM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">15</span></em><a class="headerlink" href="#area.Category.FARM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.FIELD">
+<span class="sig-name descname"><span class="pre">FIELD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#area.Category.FIELD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.FOREST">
+<span class="sig-name descname"><span class="pre">FOREST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#area.Category.FOREST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.FORT">
+<span class="sig-name descname"><span class="pre">FORT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">31</span></em><a class="headerlink" href="#area.Category.FORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.GARDEN">
+<span class="sig-name descname"><span class="pre">GARDEN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#area.Category.GARDEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.HOUSE">
+<span class="sig-name descname"><span class="pre">HOUSE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#area.Category.HOUSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.LAKE">
+<span class="sig-name descname"><span class="pre">LAKE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#area.Category.LAKE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.LAND">
+<span class="sig-name descname"><span class="pre">LAND</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#area.Category.LAND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.MANSION">
+<span class="sig-name descname"><span class="pre">MANSION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">11</span></em><a class="headerlink" href="#area.Category.MANSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.MARKET">
+<span class="sig-name descname"><span class="pre">MARKET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">12</span></em><a class="headerlink" href="#area.Category.MARKET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.MONASTRY">
+<span class="sig-name descname"><span class="pre">MONASTRY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">22</span></em><a class="headerlink" href="#area.Category.MONASTRY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.PARK">
+<span class="sig-name descname"><span class="pre">PARK</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#area.Category.PARK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.RIVER">
+<span class="sig-name descname"><span class="pre">RIVER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#area.Category.RIVER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.SEA">
+<span class="sig-name descname"><span class="pre">SEA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#area.Category.SEA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.STREET">
+<span class="sig-name descname"><span class="pre">STREET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">50</span></em><a class="headerlink" href="#area.Category.STREET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.TOWNHALL">
+<span class="sig-name descname"><span class="pre">TOWNHALL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#area.Category.TOWNHALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.UNDEFINED">
+<span class="sig-name descname"><span class="pre">UNDEFINED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#area.Category.UNDEFINED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.UNIVERSITY">
+<span class="sig-name descname"><span class="pre">UNIVERSITY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">14</span></em><a class="headerlink" href="#area.Category.UNIVERSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="area.Category.WALL">
+<span class="sig-name descname"><span class="pre">WALL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">33</span></em><a class="headerlink" href="#area.Category.WALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">src</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">area module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="block.html">block module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="castle.html">castle module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="city.html">city module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="district.html">district module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">field module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="house.html">house module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lake.html">lake module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="land.html">land module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="map.html">map module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="street.html">street module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">tools module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viewer.html">viewer module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to src’s documentation!</a></li>
+      <li>Next: <a href="block.html" title="next chapter">block module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/area.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

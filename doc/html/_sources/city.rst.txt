@@ -1,0 +1,7 @@
+city module
+===========
+
+.. automodule:: city
+   :members:
+   :undoc-members:
+   :show-inheritance:

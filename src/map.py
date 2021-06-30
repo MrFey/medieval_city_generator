@@ -7,14 +7,14 @@ import random as r
 
 
 def _partition_polygon00(poly, nb_district):
-    """Split a Polygon into sub polygons
+        """Split a Polygon into sub polygons
 
-    param: poly: polygon that delimits the area
-    type: Polygon
+           param: poly: polygon that delimits the area
+           type: Polygon
 
-    param: nb_district: number of districts we want
-    type: int
-    """
+           param: nb_district: number of districts we want
+           type: int
+        """
         (min_x,min_y,max_x,max_y) = poly.bounds
         nb = 0
         points = []
@@ -41,23 +41,21 @@ def _get_sub_region00(vor, poly):
 
 
 class Map():
+    """map class
 
+          Args:
+             population: int, determine the density and the size of the map
+             has_walls: boolean, specify if the map has walls or not
+             has_castle: boolean, specify if the map has a castle or not (one for the whole map)
+             has_lake: boolean, specify if the map has a lake or not (one per district)
+             has_land: boolean, specify if the map has lands instead of only fields
+             has_street: boolean, specify if the map has streets (streets are between districts)
+             verbose: prompt infos during construction
+
+    """
     #private:
 
     def __init__(self, population=5000, has_walls=False, has_castle=False, has_lake=False, has_land=False, has_street=False, verbose=False):
-        """
-         map class
-
-         Args:
-            population: int, determine the density and the size of the map
-            has_walls: boolean, specify if the map has walls or not
-            has_castle: boolean, specify if the map has a castle or not (one for the whole map)
-            has_lake: boolean, specify if the map has a lake or not (one per district)
-            has_land: boolean, specify if the map has lands instead of only fields
-            has_street: boolean, specify if the map has streets (streets are between districts)
-            verbose: prompt infos during construction
-
-         """
         #TODO: ajuster en fonction du nombre d'habitants
         radius = 100
 

@@ -1,0 +1,7 @@
+lake module
+===========
+
+.. automodule:: lake
+   :members:
+   :undoc-members:
+   :show-inheritance:

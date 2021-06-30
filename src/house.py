@@ -2,11 +2,7 @@ from area import *
 import random as r
 
 class House():
-
-    #public:
-
-    def __init__(self,polygon,has_garden,direction=0):
-        """
+    """
         house class
 
         Args:
@@ -14,7 +10,11 @@ class House():
             has_garden: boolean that specify either the house has a garden or not
             direction: int that specify the house's orientation
 
-        """
+    """
+    #public:
+
+    def __init__(self,polygon,has_garden,direction=0):
+
 
         self._polygon = polygon
         self._has_garden = has_garden

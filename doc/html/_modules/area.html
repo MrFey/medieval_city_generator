@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>area &#8212; src  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for area</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">MultiPolygon</span>
+<span class="kn">from</span> <span class="nn">shapely</span> <span class="kn">import</span> <span class="n">ops</span>
+<span class="kn">import</span> <span class="nn">shapely</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">tools</span>
+
+
+<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../area.html#area.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">UNDEFINED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">LAND</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">FIELD</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">FOREST</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">RIVER</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">LAKE</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">SEA</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">PARK</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">GARDEN</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">HOUSE</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">MANSION</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">MARKET</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">TOWNHALL</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">UNIVERSITY</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">FARM</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">CHURCH</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">CATHEDRAL</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">MONASTRY</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">FORT</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="n">CASTLE</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">WALL</span> <span class="o">=</span> <span class="mi">33</span>
+    <span class="n">STREET</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">BRIDGE</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">COMPOSITE</span> <span class="o">=</span> <span class="mi">90</span>  <span class="c1"># a union of Areas</span></div>
+
+
+<div class="viewcode-block" id="Area"><a class="viewcode-back" href="../area.html#area.Area">[docs]</a><span class="k">class</span> <span class="nc">Area</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The area is the most basic class, however it has all that&#39;s needed to</span>
+<span class="sd">        plot the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            polygon: Polygon - countour of the area</span>
+<span class="sd">            category: Category - type of area</span>
+<span class="sd">            sub_areas: list - list of sub areas if any</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_last_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Area.get_id"><a class="viewcode-back" href="../area.html#area.Area.get_id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_id</span><span class="p">():</span>
+        <span class="n">Area</span><span class="o">.</span><span class="n">_last_id</span> <span class="o">+=</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">Area</span><span class="o">.</span><span class="n">_last_id</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">sub_areas</span> <span class="o">=</span> <span class="p">[]):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span> <span class="o">=</span> <span class="n">polygon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_category</span> <span class="o">=</span> <span class="n">category</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sub_areas</span> <span class="o">=</span> <span class="n">sub_areas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="n">Area</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Area</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_category</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span>  <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">wkt</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span>
+
+<div class="viewcode-block" id="Area.split"><a class="viewcode-back" href="../area.html#area.Area.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentage</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">new_category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">GARDEN</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Split an area in two areas. Store result in self.sub_areas if inplace == True.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            percentage: float - percentage of surface for first area, between 0 and 1</span>
+<span class="sd">            direction: int - side for first area (from center to 0 = North, 90 = East...)</span>
+<span class="sd">            new_category: Category - category of the second area</span>
+
+<span class="sd">        Returns: if inplace == False</span>
+<span class="sd">            area1: Area</span>
+<span class="sd">            area2: Area</span>
+
+<span class="sd">        Tests:</span>
+<span class="sd">            &gt;&gt;&gt; surf = Area(Polygon([(0,0), (20,0), (20,40), (0,40)]), Category.HOUSE)</span>
+<span class="sd">            &gt;&gt;&gt; res = surf.split(0.25, 0, False)  # house takes 1/4 of surface and is north</span>
+<span class="sd">            &gt;&gt;&gt; res0 = Polygon([(0, 30), (0, 40), (20, 40), (20, 30), (0, 30)])</span>
+<span class="sd">            &gt;&gt;&gt; res0.symmetric_difference(res[0].polygon).area &lt; 1</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">percentage</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">is_ccw</span><span class="p">:</span> <span class="c1"># should be counter clockwise</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">coords</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">direction</span><span class="p">)</span>  <span class="c1"># degrees are cw while radian are ccw + 0 is North</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">minimum_rotated_rectangle</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">centroid</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">diameter</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">direction</span><span class="p">),</span> <span class="n">diameter</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">direction</span><span class="p">)])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">([</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">])</span>
+        <span class="n">pt_intersection</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">boundary</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pt_intersection</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pt_intersection</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># we may have more than one intersection</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">coords</span>
+        <span class="k">for</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">pts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">if</span> <span class="n">LineString</span><span class="p">((</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">))</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">pt_intersection</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1E-6</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">pt1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span>
+        <span class="n">pt2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span><span class="p">)))</span>
+        <span class="nb">dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span><span class="p">)</span> <span class="o">/</span> <span class="n">dist</span>
+        <span class="n">orth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="nb">dir</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dir</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>  <span class="c1"># ccw</span>
+        <span class="n">house_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="n">percentage</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span> <span class="c1"># hence we can reach from 0 to diameter</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="p">,]</span>
+        <span class="n">dw</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span> <span class="o">-</span> <span class="n">house_area</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># 1 meter² error accepted</span>
+            <span class="n">cut</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">([</span><span class="n">pt1</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">orth</span> <span class="o">-</span> <span class="n">diameter</span> <span class="o">*</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">pt2</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">orth</span> <span class="o">+</span> <span class="n">diameter</span> <span class="o">*</span> <span class="nb">dir</span><span class="p">])</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_polygon</span><span class="p">,</span> <span class="n">cut</span><span class="p">)</span>
+            <span class="n">dw</span> <span class="o">/=</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">-=</span> <span class="n">dw</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">pt_intersection</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">pt_intersection</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">([</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">([</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">res</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="n">house_area</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">-=</span> <span class="n">dw</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">+=</span> <span class="n">dw</span>
+        <span class="n">area0</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_category</span><span class="p">)</span>
+        <span class="n">area1</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_category</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sub_areas</span> <span class="o">=</span> <span class="p">[</span><span class="n">area0</span><span class="p">,</span> <span class="n">area1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">area0</span><span class="p">,</span> <span class="n">area1</span></div>
+
+<div class="viewcode-block" id="Area.components"><a class="viewcode-back" href="../area.html#area.Area.components">[docs]</a>    <span class="k">def</span> <span class="nf">components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sub_areas</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_areas</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">zone</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)]),</span> <span class="n">Category</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">)</span> <span class="c1"># units are meters</span>
+    <span class="n">zone</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">280</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># house in south, it takes 40 % of the area</span>
+    <span class="n">tools</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">zone</span><span class="p">,</span> <span class="s1">&#39;/tmp/house.json&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">src</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../area.html">area module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../block.html">block module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../castle.html">castle module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../city.html">city module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../district.html">district module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../field.html">field module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../house.html">house module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lake.html">lake module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../land.html">land module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../map.html">map module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../street.html">street module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">tools module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../viewer.html">viewer module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

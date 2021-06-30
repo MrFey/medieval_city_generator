@@ -3,7 +3,7 @@ from matplotlib.colors import ListedColormap
 import geopandas as gpd
 import sys
 """
-Usefull to plot the city (from the json) in a notebook
+Usefull to plot the city (from the json)
 """
 
 try:

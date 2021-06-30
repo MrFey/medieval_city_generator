@@ -2,24 +2,20 @@ import tools
 from map import *
 
 class City():
+    """city class
 
+             Args:
+                  population: int, determine the density and the size of the city
+                  has_walls: boolean, specify if the city has walls or not
+                  has_castle: boolean, specify if the city has a castle or not (one for the whole city)
+                  has_lake: boolean, specify if the city has a lake or not (one per district)
+                  has_land: boolean, specify if the city has lands instead of only fields
+                  has_street: boolean, specify if the city has streets (streets are between districts)
+                  verbose: prompt infos during construction
+    """
     _map = None
 
     def __init__(self, population, density=10000, has_walls=False, has_castle=False, has_lake=False, has_land=False,has_street=False, verbose=False):
-        """
-         city class
-
-         Args:
-            population: int, determine the density and the size of the city
-            has_walls: boolean, specify if the city has walls or not
-            has_castle: boolean, specify if the city has a castle or not (one for the whole city)
-            has_lake: boolean, specify if the city has a lake or not (one per district)
-            has_land: boolean, specify if the city has lands instead of only fields
-            has_street: boolean, specify if the city has streets (streets are between districts)
-            verbose: prompt infos during construction
-
-         """
-
         self.population = population
         self.density = density   # 10 000 ha/km2 par dÃ©faut mais peut baisser Ã  2000 ha/km2 avec les champs et monter Ã  30000 ha/km2
         self.has_walls = has_walls

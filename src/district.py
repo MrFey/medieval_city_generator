@@ -12,14 +12,14 @@ import random as r
 SUB_BLOCK_MAX =  35
 
 def _partition_polygon0(poly):
-    """Split a Polygon into sub polygons
+        """Split a Polygon into sub polygons
 
-    param: poly: polygon that delimits the area
-    type: Polygon
+        param: poly: polygon that delimits the area
+        type: Polygon
 
-    param: nb_district: number of districts we want
-    type: int
-    """
+        param: nb_district: number of districts we want
+        type: int
+        """
         (min_x,min_y,max_x,max_y) = poly.bounds
         nb = 0
         points = []
@@ -46,24 +46,23 @@ def _get_sub_region0(vor, poly):
 
 
 class District():
+    """district class
 
+        Args:
+           polygon: shapely.geometry.Polygon, that describe the district's shape
+           has_walls: boolean, specify if the district has walls or not
+           has_castle: boolean, specify if the district has a castle or not (one for the whole district)
+           has_lake: boolean, specify if the district has a lake or not (one per district)
+           has_land: boolean, specify if the district has lands instead of only fields
+           has_street: boolean, specify if the district has streets (streets are between districts)
+           verbose: prompt infos during construction
+
+    """
     #private:
 
 
     def __init__(self,polygon,verbose=False,has_castle=False, has_lake=False, has_land=False, has_street=False):
-        """
-         district class
 
-         Args:
-            polygon: shapely.geometry.Polygon, that describe the district's shape
-            has_walls: boolean, specify if the district has walls or not
-            has_castle: boolean, specify if the district has a castle or not (one for the whole district)
-            has_lake: boolean, specify if the district has a lake or not (one per district)
-            has_land: boolean, specify if the district has lands instead of only fields
-            has_street: boolean, specify if the district has streets (streets are between districts)
-            verbose: prompt infos during construction
-
-         """
 
         self._polygon = polygon
         self._has_lake = has_lake
