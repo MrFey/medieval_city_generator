@@ -3,12 +3,6 @@ import random as r
 
 class Lake():
 
-    #private:
-    _polygon = None
-    _area = None
-
-    #public:
-
     def __init__(self,polygon):
         polygon = polygon.buffer(0,join_style=3)
         self._polygon = polygon

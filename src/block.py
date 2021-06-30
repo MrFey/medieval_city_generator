@@ -8,7 +8,7 @@ import numpy as np
 import random as r
 
 
-HOUSES_MAX = 40
+HOUSES_MAX = 30
 
 def _partition_polygon(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds

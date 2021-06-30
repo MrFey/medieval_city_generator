@@ -3,13 +3,6 @@ import random as r
 
 class Castle():
 
-    #private:
-    _polygon = None
-    _area = None
-    _walls = None
-
-    #public:
-
     def __init__(self,polygon):
         self._polygon = polygon
         self._area = Area(self._polygon, Category.CASTLE)

@@ -9,7 +9,7 @@ import numpy as np
 import random as r
 
 
-SUB_BLOCK_MAX =  20
+SUB_BLOCK_MAX =  35
 
 def _partition_polygon0(poly):
         (min_x,min_y,max_x,max_y) = poly.bounds
@@ -50,9 +50,9 @@ class District():
         self.block_partition(verbose)
 
     def block_partition(self,verbose=False):
-        points = _partition_polygon0(self._polygon)
+        points = _partition_polygon0(self._polygon.buffer(-0.5))
         vor = Voronoi(points)
-        regions = _get_sub_region0(vor,self._polygon)
+        regions = _get_sub_region0(vor,self._polygon.buffer(-0.5))
 
         #remplir les listes des différents types de blocks
         #lac: 1 lac une fois sur 3

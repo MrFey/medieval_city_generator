@@ -3,16 +3,19 @@ import random as r
 
 class House():
 
-    #private:
-    _population = 0
-    _has_garden = False
-    _polygon = None
-    _area = None
-    _direction = 0
-
     #public:
 
     def __init__(self,polygon,has_garden,direction=0):
+        """
+        house class
+
+        Args:
+            polygon: shapely.geometry.Polygon, that describe the house's shape
+            has_garden: boolean that specify either the house has a garden or not
+            direction: int that specify the house's orientation
+
+        """
+
         self._polygon = polygon
         self._has_garden = has_garden
         self._area = Area(self._polygon, Category.HOUSE)

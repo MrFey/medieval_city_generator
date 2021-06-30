@@ -24,6 +24,8 @@ class City():
                               has_land=has_land,
                               has_street=has_street,
                               verbose=verbose)
+                if (len(self._map._districts_list) <= 0):
+                    continue
                 break
             except:
                 if (verbose):

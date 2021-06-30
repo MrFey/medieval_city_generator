@@ -6,14 +6,12 @@ import numpy as np
 import random as r
 
 
-SUB_DISTRICT_MAX =  15
-
-def _partition_polygon00(poly):
+def _partition_polygon00(poly, nb_district):
         (min_x,min_y,max_x,max_y) = poly.bounds
         nb = 0
         points = []
         (min_x,min_y,max_x,max_y) = (round(min_x), round(min_y),round(max_x), round(max_y))
-        while(nb < SUB_DISTRICT_MAX):
+        while(nb < (nb_district * 2) + 3):
             x = r.randint(min_x, max_x)
             y = r.randint(min_y, max_y)
             if (poly.contains(Point(x,y))):
@@ -45,10 +43,13 @@ class Map():
         self._population = 0
         self._districts_list = []
         self._polygon = Polygon((2 * np.random.random((8,2)) - 1) * radius ).convex_hull.buffer(radius//2)
+
+        self._nb_districts = (population // 1500) + 1
+
         self.district_partition(verbose=verbose)
 
     def district_partition(self,verbose=False):
-        points = _partition_polygon00(self._polygon)
+        points = _partition_polygon00(self._polygon, self._nb_districts)
         vor = Voronoi(points)
         regions = _get_sub_region00(vor,self._polygon)
 

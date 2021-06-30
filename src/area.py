@@ -35,7 +35,15 @@ class Category(IntEnum):
 
 
 class Area():
+    """
+        The area is the most basic class, however it has all that's needed to
+        plot the map.
 
+        Args:
+            polygon: Polygon - countour of the area
+            category: Category - type of area
+            sub_areas: list - list of sub areas if any
+    """
     _last_id = 0
     members = []
 
@@ -45,15 +53,7 @@ class Area():
         return Area._last_id
 
     def __init__(self, polygon, category, sub_areas = []):
-        """
-        The Area is the most basic class, however it has all that's needed to
-        plot the map.
 
-        Args:
-            polygon: Polygon - countour of the area
-            category: Category - type of area
-            sub_areas: list - list of sub areas if any
-        """
         self._polygon = polygon
         self._category = category
         self._sub_areas = sub_areas
