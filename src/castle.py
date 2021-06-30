@@ -2,13 +2,15 @@ from area import *
 import random as r
 
 class Castle():
+    
+    """
+    Castle class
+    Args:
+        polygon: shapely.geometry.Polygon, that represents the castle's shape
+    """
 
     def __init__(self,polygon):
-        """
-        Castle class
-        Args:
-            polygon: shapely.geometry.Polygon, that represents the castle's shape
-        """
+        
         self._polygon = polygon
         self._area = Area(self._polygon, Category.CASTLE)
         self._walls = Area(self._polygon.buffer(-0.3, join_style=2).exterior.buffer(0.3, join_style=2),Category.WALL)
