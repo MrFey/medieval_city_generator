@@ -98,21 +98,21 @@ class Map():
         for region in regions:
             if (verbose):
                 print("[+] New District")
-                if (self._has_castle and not already_a_castle):
-                    self._districts_list.append(District(region,
-                                                         verbose=verbose,
-                                                         has_castle=True,
-                                                         has_lake=self._has_lake,
-                                                         has_street=self._has_street,
-                                                         has_land=self._has_land))
-                    already_a_castle = True
-                else:
-                    self._districts_list.insert(-1,District(region,
-                                                            verbose=verbose,
-                                                            has_lake=self._has_lake,
-                                                            has_land=self._has_land,
-                                                            has_street=self._has_street,
-                                                            has_castle=False))
+            if (self._has_castle and not already_a_castle):
+                self._districts_list.append(District(region,
+                                                     verbose=verbose,
+                                                     has_castle=True,
+                                                     has_lake=self._has_lake,
+                                                     has_street=self._has_street,
+                                                     has_land=self._has_land))
+                already_a_castle = True
+            else:
+                self._districts_list.insert(-1,District(region,
+                                                        verbose=verbose,
+                                                        has_lake=self._has_lake,
+                                                        has_land=self._has_land,
+                                                        has_street=self._has_street,
+                                                        has_castle=False))
 
     def components(self):
         """Calls all districts components"""
@@ -131,5 +131,5 @@ if __name__ == "__main__":
     from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
     import json
 
-    my_map = Map(3000,has_walls=True,has_lake=True,verbose=True,has_castle=True, has_land=True)
+    my_map = Map(3000,verbose=True)
     tools.json(my_map, '/tmp/map.json')

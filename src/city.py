@@ -46,5 +46,5 @@ class City():
             return [self._map.components()]
 
 if __name__ == "__main__":
-    city = City(5000,verbose=True, has_walls=True, has_castle=True, has_lake=False, has_land=True, has_street=True)
+    city = City(5000,verbose=False, has_walls=True, has_castle=True, has_lake=False, has_land=True, has_street=True)
     tools.json(city, '/tmp/city.json',verbose=True)
